@@ -1,4 +1,14 @@
-import { Controller, Post, Body, NotFoundException, Param, Get, Put, Query, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  NotFoundException,
+  Param,
+  Get,
+  Put,
+  Query,
+  Delete,
+} from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogPostDTO } from './dto/create-blog-post.dto';
 import { ValidateObjectId } from './shared/pipes/validate-object-id.pipes';
@@ -10,45 +20,51 @@ export class BlogController {
   @Post('post')
   async addPost(@Body() createBlogPostDto: CreateBlogPostDTO) {
     const newPost = await this.blogService.addPost(createBlogPostDto);
-    return ({
+    return {
       message: 'Post has been submitted successfully!',
       post: newPost,
-    });
+    };
   }
 
   @Put('edit')
-  async editPost(@Query('postId', new ValidateObjectId()) postId, @Body() createBlogPostDto: CreateBlogPostDTO) {
-    const editedPost = await this.blogService.editPost(postId, createBlogPostDto);
+  async editPost(
+    @Query('postId', new ValidateObjectId()) postId,
+    @Body() createBlogPostDto: CreateBlogPostDTO,
+  ) {
+    const editedPost = await this.blogService.editPost(
+      postId,
+      createBlogPostDto,
+    );
 
-    if(!editedPost) {
+    if (!editedPost) {
       throw new NotFoundException('Post does not exist!');
     }
 
-    return ({
+    return {
       message: 'Post has been successfully updated',
       post: editedPost,
-    });
+    };
   }
 
   @Delete('delete')
   async deletePost(@Query('postId', new ValidateObjectId()) postId) {
     const deletedPost = await this.blogService.deletePost(postId);
 
-    if(!deletedPost) {
+    if (!deletedPost) {
       throw new NotFoundException('Post does not exist!');
     }
 
     return {
       message: 'Post has been deleted!',
       post: deletedPost,
-    }
+    };
   }
 
   @Get('post/:postId')
   async getPost(@Param('postId', new ValidateObjectId()) postId) {
     const post = await this.blogService.getPost(postId);
 
-    if(!post) {
+    if (!post) {
       throw new NotFoundException('Post does not exist!');
     }
 

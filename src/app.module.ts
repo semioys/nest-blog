@@ -9,7 +9,8 @@ import { BlogModule } from './blog/blog.module';
     MongooseModule.forRoot(
       'mongodb+srv://nest-blog:yB4tNmbLWwkH41uz@mongocluster.qmu9a.mongodb.net/nest-blog?retryWrites=true&w=majority',
       {
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        useFindAndModify: false,
       }
     ),
     BlogModule,
