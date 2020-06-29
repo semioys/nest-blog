@@ -1,6 +1,7 @@
 import { Controller, Post, Body, NotFoundException, Param, Get, Put, Query, Delete } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogPostDTO } from './dto/create-blog-post.dto';
+import { ValidateObjectId } from './shared/pipes/validate-object-id.pipes';
 
 @Controller('blog')
 export class BlogController {
@@ -16,7 +17,7 @@ export class BlogController {
   }
 
   @Put('edit')
-  async editPost(@Query('postId') postId, @Body() createBlogPostDto: CreateBlogPostDTO) {
+  async editPost(@Query('postId', new ValidateObjectId()) postId, @Body() createBlogPostDto: CreateBlogPostDTO) {
     const editedPost = await this.blogService.editPost(postId, createBlogPostDto);
 
     if(!editedPost) {
@@ -30,7 +31,7 @@ export class BlogController {
   }
 
   @Delete('delete')
-  async deletePost(@Query('postId') postId) {
+  async deletePost(@Query('postId', new ValidateObjectId()) postId) {
     const deletedPost = await this.blogService.deletePost(postId);
 
     if(!deletedPost) {
@@ -44,7 +45,7 @@ export class BlogController {
   }
 
   @Get('post/:postId')
-  async getPost(@Param('postId') postId) {
+  async getPost(@Param('postId', new ValidateObjectId()) postId) {
     const post = await this.blogService.getPost(postId);
 
     if(!post) {
